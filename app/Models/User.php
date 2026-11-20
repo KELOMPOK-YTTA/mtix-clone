@@ -2,31 +2,30 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Abstract\BaseUser;
 use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+/**
+ * Class User
+ *
+ * INHERITANCE (OOP): User mewarisi semua sifat, enkapsulasi, dan method dari BaseUser.
+ */
+class User extends BaseUser
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory;
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * POLIMORFISME (OOP): Implementasi konkrit method abstrak getRoleLabel() dari BaseUser.
+     * Mengembalikan label peran pengguna berdasarkan nilai kolom role.
      */
-    protected function casts(): array
+    public function getRoleLabel(): string
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return match ($this->role) {
+            'admin' => 'Administrator',
+            'user' => 'Member',
+            default => 'Unknown',
+        };
     }
 }

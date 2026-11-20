@@ -15,11 +15,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Default Admin User untuk testing dan operasional sistem
+        User::firstOrCreate(
+            ['phone' => '081200000001'],
+            [
+                'name' => 'Administrator Cinema XXI',
+                'pin' => '123456',
+                'role' => 'admin',
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Default Member User untuk simulasi pemesanan
+        User::firstOrCreate(
+            ['phone' => '081200000002'],
+            [
+                'name' => 'Member Cinema XXI',
+                'pin' => '123456',
+                'role' => 'user',
+            ]
+        );
     }
 }
