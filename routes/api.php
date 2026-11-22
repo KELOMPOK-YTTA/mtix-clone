@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AdminMovieController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CinemaController;
+use App\Http\Controllers\Api\MovieController;
 use App\Http\Controllers\Api\StudioController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -37,3 +39,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::match(['put', 'patch'], 'user', [UserController::class, 'update']);
 });
 
+// ── Modul Film (Anggota 2) ───────────────────────────────────────────
+// Public: Semua pengunjung dapat melihat daftar dan detail film
+Route::get('movies', [MovieController::class, 'index']);
+Route::get('movies/{slug}', [MovieController::class, 'show']);
+
+// Admin: Kelola film (CRUD) — gunakan prefix "admin"
+// TODO: Pasang middleware auth:sanctum + admin setelah Anggota 6 selesai mengimplementasikan
+//       middleware/policy admin. Contoh: Route::middleware(['auth:sanctum', 'admin'])->group(...)
+Route::prefix('admin')->group(function () {
+    Route::post('movies', [AdminMovieController::class, 'store']);
+    Route::put('movies/{slug}', [AdminMovieController::class, 'update']);
+    Route::delete('movies/{slug}', [AdminMovieController::class, 'destroy']);
+});

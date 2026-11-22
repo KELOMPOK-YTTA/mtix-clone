@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Contracts\AuthServiceInterface;
+use App\Contracts\MovieInterface;
 use App\Contracts\UserRepositoryInterface;
+use App\Repositories\MovieRepository;
 use App\Repositories\UserRepository;
 use App\Services\AuthService;
 use Illuminate\Support\ServiceProvider;
@@ -19,6 +21,9 @@ class AppServiceProvider extends ServiceProvider
         // Binding Interface/Abstraksi ke Implementasi Konkret
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(AuthServiceInterface::class, AuthService::class);
+
+        // Modul Film (Anggota 2)
+        $this->app->bind(MovieInterface::class, MovieRepository::class);
     }
 
     /**
