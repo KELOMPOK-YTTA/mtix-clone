@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Admin\AdminMovieController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CinemaController;
 use App\Http\Controllers\Api\MovieController;
+use App\Http\Controllers\Api\ScheduleController;
 use App\Http\Controllers\Api\StudioController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -44,11 +45,22 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('movies', [MovieController::class, 'index']);
 Route::get('movies/{slug}', [MovieController::class, 'show']);
 
-// Admin: Kelola film (CRUD) — gunakan prefix "admin"
+// ── Modul Jadwal Tayang (Anggota 4) ──────────────────────────────────
+// Public: daftar jadwal (filter movie_id, cinema_id, studio_id, city, date, time_from),
+// detail jadwal, dan layout kursi + status per jadwal (dipakai modul Booking).
+Route::get('schedules', [ScheduleController::class, 'index']);
+Route::get('schedules/{id}', [ScheduleController::class, 'show'])->whereNumber('id');
+Route::get('schedules/{id}/seats', [ScheduleController::class, 'seats'])->whereNumber('id');
+
+// Admin: Kelola film & jadwal (CRUD) — gunakan prefix "admin"
 // TODO: Pasang middleware auth:sanctum + admin setelah Anggota 6 selesai mengimplementasikan
 //       middleware/policy admin. Contoh: Route::middleware(['auth:sanctum', 'admin'])->group(...)
 Route::prefix('admin')->group(function () {
     Route::post('movies', [AdminMovieController::class, 'store']);
     Route::put('movies/{slug}', [AdminMovieController::class, 'update']);
     Route::delete('movies/{slug}', [AdminMovieController::class, 'destroy']);
+
+    Route::post('schedules', [ScheduleController::class, 'store']);
+    Route::put('schedules/{id}', [ScheduleController::class, 'update'])->whereNumber('id');
+    Route::delete('schedules/{id}', [ScheduleController::class, 'destroy'])->whereNumber('id');
 });
