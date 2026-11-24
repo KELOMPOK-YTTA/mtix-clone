@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Abstract\BaseContent;
 use Database\Factories\MovieFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Movie
@@ -60,11 +61,10 @@ class Movie extends BaseContent
     }
 
     /**
-     * Relasi ke jadwal tayang (Schedule).
-     * Siap digunakan setelah modul Schedule diimplementasikan.
+     * Relasi ke jadwal tayang (Schedule) — modul Anggota 4.
      */
-    // public function schedules(): HasMany
-    // {
-    //     return $this->hasMany(Schedule::class);
-    // }
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(Schedule::class);
+    }
 }
