@@ -138,7 +138,7 @@ class PaymentAdminTest extends TestCase
         Sanctum::actingAs($this->user);
         $bookingId = $this->createBooking();
         $this->postJson('/api/payments', ['booking_id' => $bookingId, 'method' => 'ewallet', 'provider' => 'dana'])->assertCreated();
-        $total = (float) Booking::find($bookingId)->total_amount;
+        $total = (int) Booking::find($bookingId)->total_amount;
 
         Sanctum::actingAs(User::factory()->create(['role' => 'admin']));
         $this->getJson('/api/admin/dashboard')
