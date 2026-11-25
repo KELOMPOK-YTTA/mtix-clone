@@ -21,9 +21,8 @@ class BookingResource extends JsonResource
             'schedule' => $this->whenLoaded('schedule', function () {
                 return [
                     'id' => $this->schedule->id,
-                    'show_date' => $this->schedule->show_date,
-                    'start_time' => $this->schedule->start_time,
-                    'end_time' => $this->schedule->end_time,
+                    'date' => $this->schedule->date?->format('Y-m-d'),
+                    'time' => $this->schedule->getTimeLabel(),
                     'price' => (float) $this->schedule->price,
                     'movie' => $this->schedule->relationLoaded('movie') ? [
                         'id' => $this->schedule->movie->id,
@@ -49,7 +48,6 @@ class BookingResource extends JsonResource
                         'schedule_seat_id' => $bookingSeat->schedule_seat_id,
                         'seat_number' => $seat?->seat_number,
                         'row_label' => $seat?->row_label,
-                        'column_number' => $seat?->column_number,
                         'price' => (float) $bookingSeat->price,
                     ];
                 });
