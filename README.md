@@ -21,7 +21,6 @@ Aplikasi web pemesanan tiket bioskop yang terinspirasi dari M-Tix (Cinema XXI). 
 - Memilih kursi
 - Pemesanan tiket
 
-> Sesuaikan daftar fitur di atas dengan fitur yang benar-benar ada di aplikasi.
 
 ## Teknologi
 
