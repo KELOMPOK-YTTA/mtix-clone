@@ -5,10 +5,13 @@ namespace App\Models;
 use App\Models\Abstract\BaseTransaction;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Traits\HasBookingCode;
 
 class Booking extends BaseTransaction
 {
+    use HasBookingCode;
+
     protected $fillable = [
         'booking_code',
         'user_id',
@@ -33,7 +36,8 @@ class Booking extends BaseTransaction
 
     public static function generateCode(): string
     {
-        return 'MTX-' . now()->format('Ymd') . '-' . strtoupper(Str::random(4));
+        // Kode dijamin unik lewat trait HasBookingCode (Anggota 6)
+        return static::generateUniqueCode('MTX-'.now()->format('Ymd').'-', 'booking_code', 4);
     }
 
     public function calculateTotal(): float
@@ -54,5 +58,19 @@ class Booking extends BaseTransaction
     public function bookingSeats(): HasMany
     {
         return $this->hasMany(BookingSeat::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    /** Pembayaran yang berhasil untuk booking ini (Anggota 6). */
+    public function successfulPayment(): HasOne
+    {
+        return $this->hasOne(Payment::class)->ofMany(
+            ['id' => 'max'],
+            fn ($query) => $query->where('status', Payment::STATUS_SUCCESS),
+        );
     }
 }

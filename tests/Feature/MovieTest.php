@@ -3,14 +3,24 @@
 namespace Tests\Feature;
 
 use App\Models\Movie;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class MovieTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Route /api/admin/* sekarang dilindungi middleware admin (Anggota 6)
+        Sanctum::actingAs(User::factory()->create(['role' => 'admin']));
+    }
 
     // ─── Public Endpoints ────────────────────────────────────────────────
 

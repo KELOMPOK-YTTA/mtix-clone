@@ -12,6 +12,9 @@ use App\Repositories\UserRepository;
 use App\Services\AuthService;
 use App\Contracts\BookableInterface;
 use App\Services\BookingService;
+use App\Payments\BankTransferPayment;
+use App\Payments\EwalletPayment;
+use App\Services\PaymentService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -32,6 +35,16 @@ class AppServiceProvider extends ServiceProvider
 
         // Modul Jadwal Tayang (Anggota 4)
         $this->app->bind(ScheduleRepositoryInterface::class, ScheduleRepository::class);
+
+        // Modul Payment (Anggota 6)
+        // SOLID - Open/Closed: tambah metode bayar baru (mis. QrisPayment) cukup di daftar ini.
+        $this->app->bind(PaymentService::class, fn ($app) => new PaymentService(
+            $app->make(BookableInterface::class),
+            [
+                new BankTransferPayment,
+                new EwalletPayment,
+            ],
+        ));
     }
 
     /**

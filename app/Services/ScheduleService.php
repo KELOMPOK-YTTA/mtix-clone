@@ -151,6 +151,8 @@ class ScheduleService
                 'row' => $rowLabel,
                 'seats' => $seats->map(fn (ScheduleSeat $scheduleSeat) => [
                     'seat_id' => $scheduleSeat->seat_id,
+                    // Dipakai frontend saat POST /api/bookings (seat_ids = schedule_seat_id)
+                    'schedule_seat_id' => $scheduleSeat->id,
                     'label' => $scheduleSeat->seat->row_label.$scheduleSeat->seat->seat_number,
                     'status' => $scheduleSeat->status,
                 ])->values(),

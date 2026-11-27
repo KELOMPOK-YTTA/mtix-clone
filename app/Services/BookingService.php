@@ -20,8 +20,9 @@ class BookingService implements BookableInterface
 
             $schedule = Schedule::findOrFail($scheduleId);
 
-            if ($schedule->status !== 'scheduled') {
-                throw new Exception('Jadwal tayang tidak tersedia untuk pemesanan.');
+            // Tabel schedules tidak punya kolom status, jadi cek dari waktu tayang
+            if ($schedule->getStartsAt()->isPast()) {
+                throw new Exception('Jadwal tayang sudah lewat, tidak bisa dipesan.');
             }
 
             $seats = ScheduleSeat::where('schedule_id', $scheduleId)
@@ -34,8 +35,8 @@ class BookingService implements BookableInterface
             }
 
             foreach ($seats as $seat) {
-                if ($seat->status !== 'available') {
-                    throw new Exception("Kursi {$seat->seat->seat_number} sudah dipesan atau dikunci pengguna lain.");
+                if (! $seat->isAvailable()) {
+                    throw new Exception("Kursi {$seat->seat->row_label}{$seat->seat->seat_number} sudah dipesan atau dikunci pengguna lain.");
                 }
             }
 
@@ -56,10 +57,8 @@ class BookingService implements BookableInterface
             ]);
 
             foreach ($seats as $seat) {
-                $seat->update([
-                    'status' => 'locked',
-                    'locked_until' => $booking->expires_at,
-                ]);
+                // 'booked' = kursi dipesan, menunggu pembayaran (lihat ScheduleSeat)
+                $seat->update(['status' => ScheduleSeat::STATUS_BOOKED]);
 
                 BookingSeat::create([
                     'booking_id' => $booking->id,
@@ -67,8 +66,6 @@ class BookingService implements BookableInterface
                     'price' => $schedule->price,
                 ]);
             }
-
-            $schedule->decrement('available_seats', $seats->count());
 
             return $booking->load(['schedule.movie', 'schedule.studio.cinema', 'bookingSeats.scheduleSeat.seat']);
         });
@@ -94,10 +91,8 @@ class BookingService implements BookableInterface
             $booking->update(['status' => 'confirmed']);
 
             foreach ($booking->bookingSeats as $bookingSeat) {
-                $bookingSeat->scheduleSeat->update([
-                    'status' => 'booked',
-                    'locked_until' => null,
-                ]);
+                // 'taken' = kursi sudah dibayar
+                $bookingSeat->scheduleSeat->update(['status' => ScheduleSeat::STATUS_TAKEN]);
             }
 
             return $booking->load(['schedule.movie', 'schedule.studio.cinema', 'bookingSeats.scheduleSeat.seat']);
@@ -119,13 +114,8 @@ class BookingService implements BookableInterface
             $booking->update(['status' => 'cancelled']);
 
             foreach ($booking->bookingSeats as $bookingSeat) {
-                $bookingSeat->scheduleSeat->update([
-                    'status' => 'available',
-                    'locked_until' => null,
-                ]);
+                $bookingSeat->scheduleSeat->update(['status' => ScheduleSeat::STATUS_AVAILABLE]);
             }
-
-            $booking->schedule->increment('available_seats', $booking->total_seats);
 
             return $booking->fresh();
         });
@@ -146,13 +136,8 @@ class BookingService implements BookableInterface
                     $lockedBooking->update(['status' => 'expired']);
 
                     foreach ($lockedBooking->bookingSeats as $bookingSeat) {
-                        $bookingSeat->scheduleSeat->update([
-                            'status' => 'available',
-                            'locked_until' => null,
-                        ]);
+                        $bookingSeat->scheduleSeat->update(['status' => ScheduleSeat::STATUS_AVAILABLE]);
                     }
-
-                    $lockedBooking->schedule->increment('available_seats', $lockedBooking->total_seats);
                     $count++;
                 }
             });
