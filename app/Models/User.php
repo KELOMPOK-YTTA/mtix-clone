@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Abstract\BaseUser;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class User
@@ -27,5 +28,16 @@ class User extends BaseUser
             'user' => 'Member',
             default => 'Unknown',
         };
+    }
+
+    /** Relasi ke booking milik user (dipakai admin & statistik — Anggota 6). */
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 }

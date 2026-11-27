@@ -8,6 +8,8 @@ use App\Models\Schedule;
 use App\Models\ScheduleSeat;
 use App\Models\Seat;
 use App\Models\Studio;
+use App\Models\User;
+use Laravel\Sanctum\Sanctum;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -28,6 +30,9 @@ class ScheduleApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        // Route /api/admin/* sekarang dilindungi middleware admin (Anggota 6)
+        Sanctum::actingAs(User::factory()->create(['role' => 'admin']));
 
         $this->tomorrow = now()->addDay()->toDateString();
 
