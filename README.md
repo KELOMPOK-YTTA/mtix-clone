@@ -7,7 +7,7 @@ Clone website Cinema XXI (m.21cineplex.com) berbasis **REST API** menggunakan **
 | No | Nama Lengkap | NIM |
 |----|--------------|-----|
 | 1  | Rezki Firmansyah (Ketua) | H1101251032  |
-| 2  | Riko Riko |  |
+| 2  | Riko Riko |  | H1101251065
 | 3  | Pierre Tristan Lama Rio |  |
 | 4  | Indra Prianto |  |
 | 5  | Elki Doggala |  |
