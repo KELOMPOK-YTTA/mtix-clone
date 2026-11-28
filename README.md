@@ -8,8 +8,8 @@ Clone website Cinema XXI (m.21cineplex.com) berbasis **REST API** menggunakan **
 |----|--------------|-----|
 | 1  | Rezki Firmansyah (Ketua) | H1101251032  |
 | 2  | Riko | H1101251065 |
-| 3  | Pierre Tristan Lama Rio |  |
-| 4  | Indra Prianto |  |
+| 3  | Pierre Tristan Lama Rio |H1101251076 |
+| 4  | Indra Prianto |H1101251077|
 | 5  | Elki Doggala | H1101251064 |
 | 6  | Aldan Putra Setiawan | H1101251046 |
 
