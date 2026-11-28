@@ -1,4 +1,4 @@
-# M-Tix Clone
+8# M-Tix Clone
 
 Clone website Cinema XXI (m.21cineplex.com) berbasis **REST API** menggunakan **Laravel v13** dan **MySQL**, dengan penerapan konsep PBO (Abstraksi, Inheritance, Encapsulation, Polymorphism) dan prinsip SOLID. Dibuat sebagai Tugas Akhir PPBO oleh **KELOMPOK-YTTA**.
 
@@ -10,7 +10,7 @@ Clone website Cinema XXI (m.21cineplex.com) berbasis **REST API** menggunakan **
 | 2  | Riko | H1101251065 |
 | 3  | Pierre Tristan Lama Rio |  |
 | 4  | Indra Prianto |  |
-| 5  | Elki Doggala |  |
+| 5  | Elki Doggala | H1101251064 |
 | 6  | Aldan Putra Setiawan | H1101251046 |
 
 ## Fitur Utama
